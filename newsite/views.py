@@ -17,7 +17,7 @@ def analyze(request):
     # print(removepunc)
     #Check the calues of each checkbox->I think radio button does better
     flag=1
-
+    params={'purpose':" ",'analysed_text':""}
     if removepunc=='on':
         flag=0
         punctuations='''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~'''
@@ -25,14 +25,20 @@ def analyze(request):
         for i in given_text:
             if i not in punctuations:
                 analyses+=i
-        params={'purpose':'Remove all punctuations','analysed_text':analyses}
+        
+        params['purpose']+='Remove all punctuations '
+        params['analysed_text']=analyses
         given_text=analyses
         #dont return here instead continue with the evaluations
         #return render(request,'analyze.html',params)
 
     if uppercaps=='on':
         flag=0
-        params={'purpose':'Convert to Uppercase','analysed_text':given_text.upper()}
+        if params['purpose']=="":
+            params['purpose']+='Convert to Uppercase '
+        else:
+            params['purpose']+='and Convert to Uppercase '
+        params['analysed_text']=given_text.upper()
         given_text=given_text.upper()
         #return render(request,'analyze.html',params)
 
@@ -45,7 +51,11 @@ def analyze(request):
                 finaltext+=pres
             prev=pres
         given_text=finaltext
-        params={'purpose':'Consecutive Space Remover','analysed_text':finaltext}
+        if params['purpose']=="":
+            params['purpose']+='Remove Consecutive Space Remover '
+        else:
+            params['purpose']+='and Remove Consecutive Space Remover '
+        params['analysed_text']=finaltext
         #return render(request,'analyze.html',{'purpose':'Consecutive Space Remover','analysed_text':finaltext})
 
     if flag:
